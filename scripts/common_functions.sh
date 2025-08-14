@@ -44,7 +44,6 @@ dump_props() {
   [[ -z "${codename}" ]] && codename=$(echo "$fingerprint" | cut -d'/' -f3 | cut -d':' -f1)
   [[ -z "${codename}" ]] && codename=$(grep -m1 -oP "(?<=^ro.build.fota.version=).*" -hs {system,system/system}/build*.prop | cut -d'-' -f1 | head -1)
   [[ -z "${codename}" ]] && codename=$(grep -oP "(?<=^ro.build.product=).*" -hs {vendor,system,system/system}/build*.prop | head -1)
-  
 
   fingerprint=$(grep -m1 -oP "(?<=^ro.build.fingerprint=).*" -hs {system,system/system}/build*.prop)
   [[ -z "${fingerprint}" ]] && fingerprint=$(grep -m1 -oP "(?<=^ro.vendor.build.fingerprint=).*" -hs vendor/build*.prop | head -1)
@@ -63,7 +62,7 @@ dump_props() {
   export DEVICE="$(tr 'A-Z' 'a-z' <<< $codename)"
   export FINGERPRINT="$fingerprint"
   export VERSION="$release"
-  
+
   cd -
 }
 
@@ -77,7 +76,7 @@ dump_props_to_env_file() {
 }
 
 compress_files() {
-  [ $# < 1 ] && error "Missing: working directory"
+  [ $# -lt 1 ] && error "Missing: working directory"
   [ ! -d "$1" ] && error "Cannot find directory"
 
   find "$1" -type f -size +50M -exec compress {} \;
@@ -90,4 +89,3 @@ git_auth() {
   git config --global user.email "$2"
   gh auth login --with-token <<< "$3"
 }
-
