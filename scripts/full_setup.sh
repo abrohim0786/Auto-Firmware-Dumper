@@ -4,7 +4,7 @@
 
 THIS="$0"
 
-[ -z $1 ] && error "Working directory not speficed."
+[ -z "$1" ] && error "Working directory not specified."
 WORK_DIR="$1"
 
 cd "$WORK_DIR" || exit 1;
@@ -28,7 +28,8 @@ echo "Installing DumprX..."
 git clone https://github.com/DumprX/DumprX &>xerr \
   || xerror "Cannot clone DumprX!"
 cd DumprX && chmod 755 *.sh
-bash setup.sh && cd ..
+bash setup.sh || error "DumprX setup failed"
+cd ..
 
 echo "Installing twrpdtgen and aospdtgen"
 pip3 install aospdtgen &>xerr || xerror
